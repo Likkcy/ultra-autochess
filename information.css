@@ -6,3 +6,9 @@
 .inventory-information{margin:12px 0;padding:14px;background:#eef1e5;border:1px solid #b7c5a7;border-radius:8px;color:#354c3c}.inventory-information p{font-size:14px;line-height:1.8;margin:7px 0}.inventory-information .panel-head{margin:0 0 8px}.inventory-information .inventory-recipe{color:#806736}.inventory-information .primary{margin-top:8px}
 
 .music-controls{padding:16px 0;margin-bottom:12px;border-bottom:1px solid #d7cbb3}.music-controls h3{margin:0 0 14px;color:#354c3c}.music-transport{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.music-transport button{min-width:56px;min-height:44px}.music-transport span{color:#647762;font-size:14px}.feedback-pulse{animation:feedback-pulse .65s ease-out}@keyframes feedback-pulse{0%{box-shadow:0 0 0 1px #c6a053}35%{box-shadow:0 0 26px 3px #dac287aa}100%{box-shadow:0 0 0 0 #dac28700}}@media(prefers-reduced-motion:reduce){.feedback-pulse{animation:none}}
+
+.encounter-inner{text-align:center;max-width:580px;padding:38px}.encounter-inner h2{font-size:32px;margin:14px 0;color:#365d52}.encounter-inner p{font-size:17px;line-height:1.9;color:#494d42;margin:20px 0 28px}.encounter-badge{align-self:flex-start;margin-bottom:12px;border-color:#baa169;color:#755d30;background:#f4eddc}
+
+.armory-option{display:inline-flex;gap:5px;align-items:center;margin:6px 9px 6px 0}.armory-option .text-btn{font-size:13px}
+
+.reference-inner .booster-effect-card{display:block;padding:16px 18px}.booster-effect-card>b{display:block;margin-bottom:9px}.reference-inner .booster-effect-card p{margin:7px 0}.booster-effect-card strong{color:#315f58;margin-right:6px}

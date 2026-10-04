@@ -1409,14 +1409,14 @@
     "镜子骑士",
     "詹奈"
   ],
-  "regularAugmentsImplemented": 180,
+  "regularAugmentsImplemented": 187,
   "designCounts": {
     "units": 59,
-    "augments": 188
+    "augments": 195
   },
   "runtimeCounts": {
     "units": 59,
-    "regularAugments": 180,
+    "regularAugments": 187,
     "heroAugments": 8
   },
   "palette": {

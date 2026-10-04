@@ -1,3 +1,4 @@
+import {rareItem,rareAttack,rareCast,rareTick} from './rare-equipment.mjs';
 import {luckyPools,unitRole} from './augment-specials.mjs';
 import {components,items} from './equipment-data.mjs';
 export {components,items};
@@ -8,16 +9,16 @@ const allies=(s,u)=>s.units.filter(w=>w.side===u.side&&live(w));
 const enemies=(s,u)=>s.units.filter(w=>w.side!==u.side&&live(w));
 export function recipe(a,b){const ca=components.find(c=>c[1]===a),cb=components.find(c=>c[1]===b);const badges=['光徽','暗徽','光之徽章','暗之徽章'],ba=badges.includes(a),bb=badges.includes(b);if(ba&&bb)return '统帅冠冕';if(ba&&cb||bb&&ca){const badge=ba?a:b,code=(ba?cb:ca)[0],idx=components.findIndex(c=>c[0]===code),light=['银河警备队','金属狂潮','古利特','人工智能','宇宙骑士队','银河帝国','空想乐团','科学家'],dark=['战士','神枪手','法师','神谕','护卫','重装战士','格斗家','刺客'];return ((badge==='光徽'||badge==='光之徽章')?light:dark)[idx]+'纹章';}if(!ca||!cb)return null;const pair=[ca[0],cb[0]].sort().join('');return items.find(i=>i[1].replaceAll('+','').split('').sort().join('')===pair)?.[0]??null;}
 export const emblemTraits=['银河警备队','金属狂潮','古利特','人工智能','宇宙骑士队','银河帝国','空想乐团','科学家','战士','神枪手','法师','神谕','护卫','重装战士','格斗家','刺客','召唤师','狂战士','主宰','正义使者','不屈之心','骑士之誓','导师'];
-export function equipmentName(name){return emblemTraits.some(t=>name===t+'纹章')|| components.some(c=>c[1]===name)||items.some(i=>i[0]===name);}
+export function equipmentName(name){return Boolean(rareItem(name))||emblemTraits.some(t=>name===t+'纹章')|| components.some(c=>c[1]===name)||items.some(i=>i[0]===name);}
 function addAttributes(u,text){const match=(word)=>{const m=text.match(new RegExp(`${word}\\+(\\d+(?:\\.\\d+)?)`));return m?Number(m[1]):0;};
  u.adBonus+=match('攻击力')/100;u.asBonus+=match('攻速')/100;u.ap+=match('法强');u.maxHp+=match('生命');u.armor+=match('护甲');u.mr+=match('魔抗');u.mana+=match('初始法力');u.extraCrit=(u.extraCrit??0)+match('暴击率')/100;
 }
 function burn(s,u,v,a,seconds){if(!live(v))return;v.itemBurns??=[];if(!v.itemBurns.some(b=>b.until>=s.time))v.itemBurnNext=s.time+1;const key=u.id;let b=v.itemBurns.find(b=>b.source===key);if(!b){b={source:key,next:s.time+1};v.itemBurns.push(b);}b.until=s.time+seconds;v.woundUntil=Math.max(v.woundUntil??0,b.until);}
 function titan(s,u,a){if(!owns(u,'泰坦战甲')||(u.titanStacks??0)>=25)return;u.titanStacks=(u.titanStacks??0)+1;const count=copies(u,'泰坦战甲');u.adBonus+=.02*count;u.ap+=2*count;if(u.titanStacks===25){u.armor+=20*count;u.mr+=20*count;}a.event(s,'item-stack',u,u,{item:'泰坦战甲',stacks:u.titanStacks});}
 export function initEquipment(s,a){for(const u of s.units){
- u.combatItems=[...(u.items??[])];if(u.special&&!u.mirror){u.combatItems=[];continue;}
+ u.combatItems=(u.items??[]).flatMap(n=>{const d=rareItem(n);return d?.base?[d.base,d.base]:[n];});if(u.special&&!u.mirror){u.combatItems=[];continue;}
  if(owns(u,'奇袭手套')){const lucky=(u.matchEffects?.augments??[]).some(n=>['幸运手套','双份幸运'].includes(n));const candidates=lucky?[...luckyPools[unitRole(u.name)]]:items.filter(i=>i[0]!=='奇袭手套').map(i=>i[0]);for(let i=0;i<2;i++){const index=Math.floor(s.random()*candidates.length);u.combatItems.push(candidates.splice(index,1)[0]);}}
- for(const name of u.combatItems){const def=components.find(c=>c[1]===name)??items.find(i=>i[0]===name);if(def)addAttributes(u,def[3]);}
+ for(const name of u.combatItems){const def=components.find(c=>c[1]===name)??items.find(i=>i[0]===name);if(def)addAttributes(u,def[3]);else if(rareItem(name))addAttributes(u,rareItem(name).stats);}
  const has=n=>owns(u,n),count=n=>u.combatItems.filter(x=>x===n).length;
  u.amp+=count('破星刃')*.08+count('巨兽猎刃')*.1+count('赤焰弩')*.06+count('光辉冠')*.15+count('破防护手')*.1;
  u.omni+=count('光能枪刃')*.2+count('噬光剑')*.2;
@@ -27,7 +28,7 @@ export function initEquipment(s,a){for(const u of s.units){
  if(has('生命铠'))u.maxHp*=1.12**count('生命铠');
  if(has('水银护符'))u.immuneUntil=18;
  if(has('应变头盔')){const front=u.side===0?u.y<=5:u.y>=2;if(front){u.armor+=35*count('应变头盔');u.mr+=35*count('应变头盔');}else{u.ap+=20*count('应变头盔');u.helmetBack=true;}}
- u.hp=u.maxHp;u.mana=Math.min(u.maxMana,u.mana);u.nextItemTick=1;
+ if(u.matchEffects?.augments?.includes('神器重塑'))u.maxHp+=60*u.items.filter(n=>rareItem(n)?.type==='神器').length;u.range+=count('星门射矛')*2;u.hp=u.maxHp;u.mana=Math.min(u.maxMana,u.mana);u.nextItemTick=1;
  if(has('王冠战甲')){a.shield(s,u,u.maxHp*.3*count('王冠战甲'),8,'crown');u.crownActive=true;}
  if(has('守誓战甲'))u.oathItemReady=true;
  if(has('泰坦战甲'))u.titanStacks=0;
@@ -36,13 +37,13 @@ export function initEquipment(s,a){for(const u of s.units){
  if(has('大天使杖'))u.archangelNext=5;
  if(has('炎阳战甲'))u.sunfireNext=2;
  }}
-export function attackEquipment(s,u,v,a){
+export function attackEquipment(s,u,v,a){rareAttack(s,u,v,a);
  if(owns(u,'狂怒刃'))u.asBonus+=.05*u.combatItems.filter(n=>n==='狂怒刃').length;
  titan(s,u,a);if(owns(u,'战意长枪'))a.mana(s,u,5*u.combatItems.filter(n=>n==='战意长枪').length);
  if(owns(u,'分裂光弩')){const other=enemies(s,u).filter(w=>w!==v&&a.distance(u,w)<=u.range).sort((x,y)=>a.distance(u,x)-a.distance(u,y))[0];if(other)a.hit(s,u,other,a.stats(u).ad*.7*copies(u,'分裂光弩'),'physical',{attack:true,item:true});}
  if(owns(u,'雷光弩')&&u.attacks%3===0)for(const w of [v,...enemies(s,u).filter(w=>w!==v).sort((x,y)=>a.distance(v,x)-a.distance(v,y))].slice(0,4)){a.hit(s,u,w,30*copies(u,'雷光弩'),'magic',{noCrit:true,item:true});a.buff(s,w,`shiv-${u.id}`,5,{mrPct:.3});}
 }
-export function castEquipment(s,u,a,fullCast=true){
+export function castEquipment(s,u,a,fullCast=true){rareCast(s,u,a);
  if(owns(u,'纳什护腕'))a.buff(s,u,'nashor',5,{as:.4*copies(u,'纳什护腕')});
  if(owns(u,'蓝晶符'))u.pendingItemMana=(u.pendingItemMana??0)+5*copies(u,'蓝晶符');
  const ion=enemies(s,u).filter(w=>owns(w,'离子火花')&&a.distance(w,u)<=2);for(const w of ion)a.hit(s,w,u,u.maxMana*1.6*copies(w,'离子火花'),'magic',{noCrit:true,item:true});
@@ -66,7 +67,7 @@ export function damageEquipment(s,u,v,n,kind,opts,a){
  return value;
 }
 export function tickEquipment(s,a){for(const u of s.units){
- if(live(u)){
+ if(live(u)){rareTick(s,u,a);
   if(u.pendingItemMana&&s.time>=u.lockUntil){a.mana(s,u,u.pendingItemMana);u.pendingItemMana=0;}
   const has=n=>owns(u,n);
   if(has('夜幕战衣')&&!u.edgeTriggered&&u.hp/u.maxHp<.6){u.edgeTriggered=true;u.stunUntil=0;u.untargetableUntil=s.time+1;u.asBonus+=.15*copies(u,'夜幕战衣');}

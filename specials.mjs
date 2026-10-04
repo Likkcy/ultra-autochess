@@ -14,6 +14,13 @@ export const empireUpgrades=[
  {name:'复合防御',price:8,armor:3,mr:3},
 ];
 export const boosters={'赛罗':'等离子增幅器','红莲火焰':'烈焰循环器','镜子骑士':'镜面折射器','詹伯特':'战斧加速器'};
+export const boosterInfo={
+ 赛罗:['技能命中生命低于40%的敌人时，伤害提高20%；每次施法首次击败敌人，回复最大生命10%。','伤害提高30%，回复最大生命15%。'],
+ 红莲火焰:['每次普攻获得2%攻速，最多15层（30%）；每第三次普攻回复最大生命2%。','每层3%攻速，最多45%；每第三次普攻回复最大生命3%。'],
+ 镜子骑士:['一、二星技能护盾提高20%，反击追加护盾吸收量的20个百分点；三星只强化自身护盾。','护盾提高30%，一、二星反击追加30个百分点；三星只强化自身护盾。'],
+ 詹伯特:['技能路径上的次要目标承受主目标伤害的75%；命中敌人护甲降低15%，持续4秒。','次要目标承受87.5%；护甲降低22.5%，持续4秒。']
+};
+export const boosterDescription=(name,count=2)=>boosterInfo[name]?.[count>=4?1:0]??'';
 export function initSpecials(s,a){
  s.inventionTimers=[];
  for(const side of [0,1]){const team=s.units.filter(u=>u.side===side&&!u.special),config=team[0]?.matchEffects??{};

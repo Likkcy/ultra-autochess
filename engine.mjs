@@ -1,3 +1,4 @@
+import {rivalActive,creditRivalParticipation} from './rivals.mjs';
 import {initSpecials,tickSpecials} from './specials.mjs';
 // DOM-free fixed-step combat engine. Rendering never advances simulation time.
 import {initAbilities,initAbilitySummons,initCompanions,retrySummons,castAbility,beforeAttack,afterAttack,tickAbilities,onAbilityKill} from "./abilities.mjs";
@@ -12,11 +13,11 @@ const axial=p=>({q:p.x-(p.y-(p.y&1))/2,r:p.y});
 const offset=p=>({x:p.q+(p.r-(p.r&1))/2,y:p.r});
 export function distance(a,b){a=axial(a);b=axial(b);return(Math.abs(a.q-b.q)+Math.abs(a.r-b.r)+Math.abs(a.q+a.r-b.q-b.r))/2;}
 export function neighbors(p){const a=axial(p);return [[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]].map(([q,r])=>offset({q:a.q+q,r:a.r+r})).filter(p=>p.x>=0&&p.x<WIDTH&&p.y>=0&&p.y<HEIGHT);}
-export const traitTiers={古利特:[3,5,7],银河帝国:[2,4],科学家:[2,3,4],银河警备队:[3,5,7,9,11],人工智能:[2,4,6,8,9],金属狂潮:[3,5,7,9,10],宇宙骑士队:[2,4],法师:[2,3,5],神谕:[2,4,6],狂战士:[2,3,5],战士:[2,4,6],主宰:[2,4,6],护卫:[2,4,6],重装战士:[2,3],格斗家:[2,4,6],神枪手:[2,3,5],不屈之心:[2,3,5],骑士之誓:[2,4,6],导师:[1,2,3,4],召唤师:[2,3,4],刺客:[2,4],正义使者:[2,3,6],空想乐团:[2,4,6],宿敌:[2]};
+export const traitTiers={古利特:[3,5,7],银河帝国:[2,4],科学家:[2,3,4],银河警备队:[3,5,7,9,11],人工智能:[2,4,6,8,9],金属狂潮:[3,5,7,9,10],宇宙骑士队:[2,4],法师:[2,3,5],神谕:[2,4,6],狂战士:[2,3,5],战士:[2,4,6],主宰:[2,4,6],护卫:[2,4,6],重装战士:[2,3],格斗家:[2,4,6],神枪手:[2,3,5],不屈之心:[2,3,5],骑士之誓:[2,4,6],导师:[1,2,3,4],召唤师:[2,3,4],刺客:[2,4],正义使者:[2,3,6],空想乐团:[2,4,6],宿敌:[1]};
 export const supportedTraits=['古利特','空想乐团','银河警备队','法师','神谕','狂战士','战士','护卫','格斗家','不屈之心','骑士之誓','导师','召唤师','主宰','重装战士','刺客','正义使者','神枪手','人工智能','金属狂潮','科学家','银河帝国','宇宙骑士队','宿敌'];
 const pick=(arr,star)=>arr[star-1];
 const alive=u=>!u.dead&&u.hp>0;
-export function traitCounts(units){const counts={};const names=new Set();for(const u of units){if(u.special||names.has(u.name))continue;names.add(u.name);for(const t of u.traits)counts[t]=(counts[t]??0)+1;}return counts;}
+export function traitCounts(units){const counts={};const names=new Set();for(const u of units){if(u.special||names.has(u.name))continue;names.add(u.name);for(const t of u.traits)counts[t]=(counts[t]??0)+1;}if(counts["宿敌"]!==undefined)counts["宿敌"]=rivalActive(units)?1:0;return counts;}
 export function tier(counts,name){let t=-1;for(const [i,n] of (traitTiers[name]??[]).entries())if((counts[name]??0)>=n)t=i;return t;}
 function makeUnit(def,p,id){
  const star=Math.max(1,Math.min(3,Number(p.star)||1));const hero=Boolean(p.hero&&heroNames.includes(def.name));
@@ -48,7 +49,7 @@ function hit(s,u,v,n,kind='physical',opts={}){
  for(const sh of v.shields){const absorb=Math.min(sh.amount,value);sh.amount-=absorb;value-=absorb;if(sh.tracker){const owner=lookup(s,sh.tracker.source);if(owner){owner.tracked??={};owner.tracked[sh.tracker.serial]=(owner.tracked[sh.tracker.serial]??0)+absorb;}}if(value<=0)break;}
  const actual=Math.min(v.hp,value);v.hp-=actual;const absorbed=before-value;
  if(v.stance)v.stance.absorbed+=actual+absorbed;if(v.guard)v.guard.absorbed+=actual+absorbed;
- u.damageDone+=actual+absorbed;
+ u.damageDone+=actual+absorbed;if(actual+absorbed>0){const owner=u.owner?lookup(s,u.owner):u;if(owner&&!owner.mirror&&owner.side!==v.side){v.participants??={};v.participants[owner.id]=true;}}
  if(v.hp<=0&&!v.pendingKiller){v.pendingKiller=u.id;v.pendingKillTag=opts.tag??null;}
  mana(s,v,Math.min(15,(actual+absorbed)*0.05));
  if(u.omni&&!opts.item&&!opts.reflected)heal(s,u,(actual+absorbed)*u.omni);
@@ -108,7 +109,7 @@ export function createBattle(catalog,placements,seed=4317){
  if(![0,1].every(side=>s.units.some(u=>u.side===side)))throw Error('双方至少各需一名棋子');
  for(let i=0;i<s.units.length;i++){s.units[i].evolutions=placements[i].evolutions??[];s.units[i].oathCaptain=Boolean(placements[i].oathCaptain);s.units[i].matchEffects=placements[i].matchEffects??{};s.units[i].booster=placements[i].booster??null;s.units[i].instanceId=placements[i].instanceId??null;s.units[i].eyePosition=placements[i].eyePosition??null;const def=catalog.find(d=>d.name===s.units[i].name);if(def.special){s.units[i].special=true;s.units[i].neutral=Boolean(def.neutral);s.units[i].neutralLoot=placements[i].neutralLoot??[];s.units[i].npcStage=def.npcStage??0;s.units[i].npcNext=def.npcStage===5?5:6;}}
  for(const u of s.units)for(const item of u.items)if(item.endsWith('纹章')){const trait=item.slice(0,-2);if(traitTiers[trait]&&!u.traits.includes(trait))u.traits.push(trait);}
- const rivalSides=[0,1].map(side=>(traitCounts(s.units.filter(u=>u.side===side))['宿敌']??0)>=2);for(const u of s.units)if(u.name==='赛罗'&&rivalSides[u.side])for(const trait of u.evolutions)if(['正义使者','法师','格斗家','狂战士'].includes(trait)&&!u.traits.includes(trait))u.traits.push(trait);
+ const rivalSides=[0,1].map(side=>rivalActive(s.units.filter(u=>u.side===side)));for(const u of s.units)u.rivalActive=['赛罗','贝利亚'].includes(u.name)&&rivalSides[u.side];for(const u of s.units)if(u.name==='赛罗'&&rivalSides[u.side])for(const trait of u.evolutions)if(['正义使者','法师','格斗家','狂战士'].includes(trait)&&!u.traits.includes(trait))u.traits.push(trait);
  computeTraits(s);initAbilities(s,abilityAPI);initSpecials(s,abilityAPI);initCombatAugments(s,abilityAPI);initEquipment(s,abilityAPI);finalizeAugmentShields(s,abilityAPI);initAugmentSpecials(s,abilityAPI);initAbilitySummons(s,abilityAPI);initCompanions(s,abilityAPI);for(const u of [...s.units])if(u.name==='赛文')spawnMiclas(s,u);tickSpecials(s,abilityAPI);for(const side of [0,1]){s.traits[side].startingHp=s.units.filter(u=>u.side===side&&!u.special&&u.traits.includes('银河警备队')).reduce((n,u)=>n+u.maxHp,0);const heavy=tier(s.traits[side].counts,'重装战士');if(heavy>=0)for(const u of s.units.filter(u=>u.side===side))shield(s,u,u.maxHp*([.12,.2][heavy]*(ownsCombatAugment(u,'稳固重装')?1.1:1)),ownsCombatAugment(u,'稳固重装')?12:8,'heavy');}
  for(const u of s.units)u.openingSnapshot=Object.fromEntries(['maxHp','baseAd','baseAs','armor','mr','range','ap','adBonus','asBonus','amp','dr','omni','mana','maxMana','extraCrit','extraCritDamage','skillCrit','combatItems','helmetBack','oathItemReady','dragonNext','redemptionNext','archangelNext','sunfireNext','immuneUntil'].filter(k=>u[k]!==undefined).map(k=>[k,structuredClone(u[k])]));
  event(s,'start',null,null,{seed:s.seed});return s;
@@ -201,7 +202,7 @@ function resolve(s,a){
 }
 function deaths(s){
  for(const u of s.units){if(u.dead||u.hp>0)continue;u.dead=true;u.shields=[];u.stance=null;if(u.neutral&&!u.lootDropped){u.lootDropped=true;event(s,'loot-drop',null,u,{loot:structuredClone(u.neutralLoot??[]),x:u.x,y:u.y});}event(s,'death',lookup(s,u.pendingKiller),u);
-  const killer=lookup(s,u.pendingKiller);augmentDeath(s,u,killer,abilityAPI);
+  creditRivalParticipation(s,u);const killer=lookup(s,u.pendingKiller);augmentDeath(s,u,killer,abilityAPI);
   if(!u.special&&!u.killCredited&&killer){u.killCredited=true;if(!killer.special&&!killer.mirror){killer.permanent.kills++;onAbilityKill(s,killer,u,abilityAPI);
    if(killer.name==='阿斯特拉'&&killer.hero&&u.pendingKillTag==='kick'&&(killer.astraKills??0)<5){killer.astraKills=(killer.astraKills??0)+1;killer.asBonus+=.2;}
    if(killer.hero&&killer.name==='贝利亚'&&killer.belialUntil>s.time){heal(s,killer,killer.maxHp*.08);killer.belialUntil=Math.min(s.time+12,killer.belialUntil+2);buff(s,killer,'belial-form',killer.belialUntil-s.time,{as:pick([.35,.45,.65],killer.star)});}

@@ -29,7 +29,7 @@ function applyJan(s,u,a){const enemyJan=s.units.filter(w=>w.side!==u.side&&w.nam
 export function initAbilities(s,a){
  for(const u of [...s.units]){
   if(u.cost===5&&u.star===3){u.maxHp+=4000;u.hp=u.maxHp;}
-  const p=u.permanent;u.maxHp*=1+(p.hpPercent??0);u.dr=1-(1-u.dr)*(1-Math.min(.8,p.dr??0));u.maxHp+=(p.hp??0);u.hp=u.maxHp;u.baseAd+=(p.ad??0);u.asBonus+=(p.as??0);u.adBonus+=(p.adPercent??0)+Math.floor((p.rivalKills??0)/8)*.08*(u.name==='贝利亚'?1:0);u.extraCrit=(u.extraCrit??0)+(p.crit??0);u.armor+=(p.armor??0);u.mr+=(p.mr??0);
+  const p=u.permanent;u.maxHp*=1+(p.hpPercent??0);u.dr=1-(1-u.dr)*(1-Math.min(.8,p.dr??0));u.maxHp+=(p.hp??0);u.hp=u.maxHp;u.baseAd+=(p.ad??0);u.asBonus+=(p.as??0);u.adBonus+=(p.adPercent??0)+Math.floor((p.rivalKills??0)/8)*.08*(u.name==='贝利亚'&&u.rivalActive?1:0);u.extraCrit=(u.extraCrit??0)+(p.crit??0);u.armor+=(p.armor??0);u.mr+=(p.mr??0);
   if(u.name==='奥特之父'){u.dr=1-(1-u.dr)*(1-n(u,[.15,.2,.6]));u.adBonus+=n(u,[.2,.3,1]);}
   if(u.name==='托雷基亚'){u.eye={x:u.eyePosition?.x??u.x,y:u.eyePosition?.y??u.y};}
   applyJan(s,u,a);
@@ -161,7 +161,6 @@ export function tickAbilities(s,a){
 }
 export function onAbilityKill(s,killer,v,a){
  if((s.traits[killer.side].counts['银河帝国']??0)>=2&&killer.traits.includes('银河帝国'))killer.empireKills=(killer.empireKills??0)+1;
- if(s.traits[killer.side].counts['宿敌']>=2&&['赛罗','贝利亚'].includes(killer.name)){const before=killer.permanent.rivalKills??0;killer.permanent.rivalKills=before+(killer.name==='贝利亚'&&v.name==='泰罗'?2:1);if(killer.name==='贝利亚')killer.adBonus+=(Math.floor(killer.permanent.rivalKills/8)-Math.floor(before/8))*.08;}
  if(killer.name==='艾斯杀手'&&killer.sampleTarget===v.id&&!killer.sampleBonus){killer.sampleBonus=true;for(const key of ['ap','armor','mr'])killer[key]+=killer.sample[key];killer.baseAd+=killer.sample.ad;}
  const assassin=a.tier(s.traits[killer.side].counts,'刺客');if(assassin>=0&&killer.traits.includes('刺客'))a.buff(s,killer,'assassin-kill',5,{ad:[.2,.35][assassin],as:[.3,.5][assassin]});
 }

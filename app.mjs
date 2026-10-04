@@ -43,7 +43,7 @@ function showDetail(p){selectedEntity=p;const def=p.definition??names.get(p.name
 }
 function updatePanels(){
  $('player-size').textContent=placements.filter(p=>p.side===0&&!p.special).length;$('enemy-size').textContent=placements.filter(p=>p.side===1&&!p.special).length;
- const preview=placements.filter(p=>p.side===side&&!p.special).map(p=>({...p,traits:[...(names.get(p.name)?.traits??[]),...(p.items??[]).filter(n=>n.endsWith('纹章')).map(n=>n.slice(0,-2))]}));if((traitCounts(preview)['宿敌']??0)>=2)for(const u of preview)if(u.name==='赛罗')u.traits=[...new Set([...u.traits,...(u.evolutions??[])])];const counts=battle?battle.traits[side].counts:traitCounts(preview);
+ const preview=placements.filter(p=>p.side===side&&!p.special).map(p=>({...p,traits:[...(names.get(p.name)?.traits??[]),...(p.items??[]).filter(n=>n.endsWith('纹章')).map(n=>n.slice(0,-2))]}));if((traitCounts(preview)['宿敌']??0)>=1)for(const u of preview)if(u.name==='赛罗')u.traits=[...new Set([...u.traits,...(u.evolutions??[])])];const counts=battle?battle.traits[side].counts:traitCounts(preview);
  $('traits').innerHTML=Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([name,n])=>{const t=traitTiers[name]??[1],on=t.some(v=>n>=v);return '<button class="trait-chip '+(on?'on':'')+'" data-trait-info="'+esc(name)+'">'+esc(name)+' '+n+' / '+(t.find(v=>v>n)??t.at(-1))+'</button>';}).join('');
  for(const b of $('traits').querySelectorAll('button'))b.onclick=()=>reference.showTrait(b.dataset.traitInfo,counts[b.dataset.traitInfo]);
 }
