@@ -1,4 +1,4 @@
-export const reconciliation={id:'aug-reconciliation',name:'世纪和解',tier:'金',category:'羁绊强化',nodes:['2-1','3-2','4-2'],effect:'赛罗与贝利亚可以共同激活宿敌。任意一方参与击杀时，双方共享该次进度；同一敌人只计一次。贝利亚参与击败敌方赛罗时，该次进度计2次。',scope:'宿敌',trait:'宿敌',minimumMembers:1};
+export const reconciliation={id:'aug-reconciliation',name:'世纪和解',tier:'金',category:'羁绊强化',nodes:['2-1'],effect:'赛罗与贝利亚可以共同激活宿敌。任意一方参与击杀时，双方共享该次进度；同一敌人只计一次。贝利亚参与击败敌方赛罗时，该次进度计2次。',scope:'宿敌',trait:'宿敌',minimumMembers:1};
 export function rivalActive(units){const team=units.filter(u=>!u.special&&!u.mirror&&['赛罗','贝利亚'].includes(u.name));const names=new Set(team.map(u=>u.name));return names.size===1||names.size===2&&team.some(u=>u.matchEffects?.augments?.includes('世纪和解'));}
 export function creditRivalParticipation(s,v){
  if(v.special||v.mirror||v.rivalCredited)return;v.rivalCredited=true;
