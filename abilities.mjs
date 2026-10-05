@@ -1,3 +1,4 @@
+import {metalDefinitions,metalDefinition,castKing} from './legendary-traits.mjs';
 // Additional character mechanics. Uses the existing combat engine's damage and event rules.
 import {gridmanDefinition} from './gridman.mjs';
 const n=(u,a)=>a[Math.min(3,u.star)-1];
@@ -38,8 +39,9 @@ export function initAbilities(s,a){
 export function initAbilitySummons(s,a){
  for(const side of [0,1]){
   const tr=s.traits[side],team=s.units.filter(u=>u.side===side&&!u.special),grid=a.tier(tr.counts,'古利特');
-  if(grid>=0){const distinct=[...new Map(team.filter(u=>u.traits.includes('古利特')).sort((x,y)=>x.star-y.star).map(u=>[u.name,u])).values()],S=distinct.reduce((v,u)=>v+u.star,0),owner=distinct[0];const d=gridmanDefinition(grid,S,owner.matchEffects?.augments?.includes('我们的世界'));const giant=spawn(s,owner,d,a,grid+1);if(giant){if(grid===2&&S>=14&&owner.matchEffects?.augments?.includes('我们的世界')){giant.star=4;giant.maxHp=giant.hp=24000;giant.baseAd=400;giant.baseAs=1.2;giant.armor=giant.mr=120;giant.mana=40;giant.maxMana=80;giant.immuneUntil=60;}giant.gridTier=grid;giant.gridStars=S;if(grid>=1&&giant.star<4)giant.asBonus+=.3;if(grid===2){if(giant.star<4){giant.armor+=30;giant.mr+=30;}a.shield(s,giant,giant.maxHp*.25,60,'grid');}}}
-  const metal=a.tier(tr.counts,'金属狂潮');if(metal>=1){const owner=team.find(u=>u.traits.includes('金属狂潮'));const defs=[{name:'乌英达姆',hp:1000,ad:50,as:.6,armor:45,range:1,mana:[30,90]},{name:'英普莱扎',hp:900,ad:65,as:.65,armor:35,range:3,mana:[20,80]},{name:'加拉特隆',hp:1400,ad:70,as:.65,armor:50,range:3,mana:[40,110]}];for(const d of defs.slice(0,Math.min(3,metal))){const pet=spawn(s,owner,d,a);if(pet&&metal===4){pet.maxHp*=1.8;pet.hp=pet.maxHp;pet.amp+=.6;}}}
+  if(grid>=0){const distinct=[...new Map(team.filter(u=>u.traits.includes('古利特')).sort((x,y)=>x.star-y.star).map(u=>[u.name,u])).values()],S=distinct.reduce((v,u)=>v+u.star,0),owner=distinct[0];const d=gridmanDefinition(grid,S,owner.matchEffects?.augments?.includes('我们的世界'));const giant=spawn(s,owner,d,a,grid+1);if(giant){if(grid===2&&S>=14&&owner.matchEffects?.augments?.includes('我们的世界')){giant.star=4;giant.maxHp=giant.hp=24000;giant.baseAd=400;giant.baseAs=1.2;giant.armor=giant.mr=120;giant.mana=40;giant.maxMana=80;giant.immuneUntil=60;}giant.definition=d;giant.gridTier=grid;giant.gridStars=S;if(grid===2){a.shield(s,giant,giant.maxHp*.25,60,'grid');}}}
+  const metal=a.tier(tr.counts,'金属狂潮');if(metal>=1){const owner=team.find(u=>u.traits.includes('金属狂潮'));for(const raw of metalDefinitions.filter(d=>(tr.counts['金属狂潮']??0)>=d.threshold)){const d=metalDefinition(raw,tr.counts['金属狂潮']);const pet=spawn(s,owner,d,a,d.star);if(pet){pet.definition=d;pet.amp=d.amp;}}}
+
  }
 }
 export function initCompanions(s,a){for(const u of [...s.units])if(!u.special)pets(s,u,a);}
@@ -52,6 +54,7 @@ function channel(s,u,kind,v,value,times,a,extra={}){u.effects??=[];u.effects=u.e
 export function castAbility(s,u,v,a){
  const st=a.stats(u),M=x=>magic(u,n(u,x),a),P=x=>st.ad*n(u,x),H=(w,value,kind='magic',options={})=>a.hit(s,u,w,value,kind,options),shield=(w,value,seconds,key)=>a.shield(s,w,value,seconds,key),buff=(w,key,seconds,values)=>a.buff(s,w,key,seconds,values);
  switch(u.name){
+  case '奥特之王':castKing(s,u,a);break;
   case '皮古蒙':{const w=lowest(s,u);if(w){a.heal(s,w,M([160,240,400]));for(const z of group(s,u,w,1,a))if(z!==w)a.heal(s,z,M([80,120,200]));}break;}
   case '内海将':{const w=allies(s,u).sort((x,y)=>a.stats(y).as-a.stats(x).as)[0];if(w){shield(w,M([120,180,300]),5,`utsumi-${u.id}`);buff(w,`utsumi-${u.id}`,5,{as:n(u,[.15,.2,.3])});}break;}
   case '宝多六花':for(const w of group(s,u,u,1,a))shield(w,M([100,150,250]),4,`rikka-${u.id}`);break;
@@ -96,16 +99,16 @@ export function castAbility(s,u,v,a){
   case '镜子骑士':{const serial=(u.effectSerial??0)+1;u.effectSerial=serial;u.tracked??={};u.tracked[serial]=0;for(const w of u.star===3?allies(s,u):group(s,u,u,1,a))trackedShield(s,u,w,(u.star===3?magic(u,12000,a):M([400,600,0]))*(1+.2*(u.boosterScale??0)*(u.star===3&&w!==u?0:1)),u.star===3?10:4,`mirror-${u.id}`,a,serial);later(s,u,'mirror-burst',u.star===3?3:4,{value:u.star===3?magic(u,5000,a):M([200,300,0]),serial,ratio:n(u,[.5,.7,3])+(u.star===3?0:.2*(u.boosterScale??0)),all:u.star===3});if(u.star===3&&!u.special){for(const w of [...allies(s,u)].filter(w=>!w.special)){const opening=w.openingSnapshot??w,def={name:w.name,hp:opening.maxHp,ad:opening.baseAd,as:opening.baseAs,armor:opening.armor,mr:opening.mr,range:opening.range,mana:[opening.mana,opening.maxMana]};const clone=spawn(s,u,def,a,w.star);if(clone){Object.assign(clone,structuredClone(w.openingSnapshot??{}));clone.hp=clone.maxHp;clone.mirror=true;clone.traits=[...w.traits];for(const key of ['dragonNext','redemptionNext','archangelNext','sunfireNext','immuneUntil'])if(clone[key])clone[key]+=s.time;}}}break;}
   case '詹奈':if(u.star===3){if(!u.janGranted){u.janGranted=true;u.janDrones=100;u.janNext=s.time+1;}for(const w of enemies(s,u))for(let i=0;i<12;i++)later(s,u,'jan-rocket',i*.25,{target:w.id,value:1000});}else{for(let i=0;i<6;i++)later(s,u,'retarget-shot',i*.12,{target:v.id,value:P([.45,.65,0]),kindDamage:'physical'});later(s,u,'jan-burst',.75,{position:{x:v.x,y:v.y},value:M([200,300,0])});}break;
   case '古利特超人':if(u.star===4){for(const w of enemies(s,u))H(w,6000,'magic');for(const w of allies(s,u))a.shield(s,w,w.maxHp*.5,8,'grid-terminal');break;}for(const w of ray(s,u,v,a))H(w,magic(u,(220+25*u.gridStars)*(u.gridTier>=1?1.25:1),a));break;
-  case '乌英达姆':shield(u,350,5,'windam');H(v,200);stun(s,v,1);break;
+  case '乌英达姆':shield(u,n(u,[350,525,875]),5,'windam');H(v,n(u,[200,300,500]));stun(s,v,1);break;
   case '英普莱扎':for(let i=0;i<3;i++)later(s,u,'retarget-shot',i*.15,{target:v.id,value:st.ad*1.2,kindDamage:'physical'});break;
-  case '加拉特隆':for(const w of ray(s,u,v,a)){H(w,450);buff(w,'galactron-slow',4,{as:-.2});}break;
+  case '加拉特隆':for(const w of ray(s,u,v,a)){H(w,n(u,[450,675,1125]));buff(w,'galactron-slow',4,{as:-.2});}break;
   default:return false;
  }
  return true;
 }
 export function beforeAttack(s,u,v,a){
  if(u.name==='乔尼亚斯'&&u.attacks%3===0)return n(u,[1.4,1.7,2.6]);
- if(u.name==='古利特超人'&&u.star===4)return 3;if(u.name==='古利特超人'&&u.gridTier>=1&&u.attacks%3===0)return 1.8;
+ if(u.royal)return 3;if(u.name==='古利特超人'&&u.star===4)return 3;if(u.name==='古利特超人'&&u.gridTier>=1&&u.attacks%3===0)return 1.8;
  if(u.name==='新条茜'&&u.akaneShots>0){u.akaneShots--;return n(u,[1.8,2.2,10]);}
  return 1;
 }

@@ -1,6 +1,8 @@
 import {heroInfo} from './unit-info.mjs';
 // Player copy is separate from the detailed design specification and eligibility rules.
 const overrides={
+我们的世界:'获得内海将、宝多六花各一张。上场7名不同古利特棋子且总星级达到14时，召唤四星古利特超人：24000生命、400攻击力，技能对全体敌人造成6000魔法伤害，并为友军提供50%最大生命护盾。棋子库存不足时各补1金币。',
+
 幸运手套:'获得1件奇袭手套。奇袭手套根据持有者的定位提供两件随机成装。',
 孤立防线:'开战时，没有相邻友军的棋子获得最大生命18%的护盾，持续8秒。',
 电火花:'棋子受到普攻暴击时，对攻击者造成80固定魔法伤害，每名棋子冷却1秒。',
@@ -15,5 +17,5 @@ const overrides={
 export function playerAugmentEffect(d){
  const hero=d.id.startsWith('hero-')?heroInfo[d.name]:null;
  const text=hero?'获得1名'+d.name+'。英雄强化 · '+hero[0]+'：'+hero[1]+(hero[2]?' '+hero[2]:''):overrides[d.name]??d.effect;
- return text.replace(/真实(?:奕子|棋子)/g,'棋子').replace(/真实友军/g,'友军').replace(/真实成员/g,'成员').replace(/真实上场人口/g,'上场人数').replace(/真实二三星棋子/g,'二、三星棋子').replace(/真实纹章持有者/g,'纹章持有者').replace(/敌方真实棋子/g,'敌方棋子').replace(/不同真实棋子/g,'不同棋子').replace(/非召唤敌人/g,'敌人').replace(/真实击杀/g,'击杀').replace(/原件/g,'棋子').replace(/永久普通成装/g,'普通成装').replace(/永久成装/g,'成装').replace(/永久装备/g,'装备').replace(/，?法力锁跳过/g,'').replace(/；?[^。；]*规则见09[^。；]*[。；]?/g,'。').trim();
+ return text.replace(/真实(?:奕子|棋子)/g,'棋子').replace(/真实友军/g,'友军').replace(/真实成员/g,'成员').replace(/真实上场人口/g,'上场人数').replace(/真实二三星棋子/g,'二、三星棋子').replace(/真实纹章持有者/g,'纹章持有者').replace(/敌方真实棋子/g,'敌方棋子').replace(/不同真实棋子/g,'不同棋子').replace(/非召唤敌人/g,'敌人').replace(/真实击杀/g,'击杀').replace(/原件/g,'棋子').replace(/永久普通成装/g,'普通成装').replace(/永久成装/g,'成装').replace(/永久装备/g,'装备').replace(/，?法力锁跳过/g,'').replace(/；?[^。；]*规则见09[^。；]*[。；]?/g,'。').replace(/这是羁绊强化名称，不额外增加人口。/g,'').trim();
 }

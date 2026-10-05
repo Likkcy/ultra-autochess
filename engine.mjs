@@ -1,3 +1,4 @@
+import {initRoyalFusion,tickRoyalFusion} from './legendary-traits.mjs';
 import {rivalActive,creditRivalParticipation} from './rivals.mjs';
 import {initSpecials,tickSpecials} from './specials.mjs';
 // DOM-free fixed-step combat engine. Rendering never advances simulation time.
@@ -111,6 +112,7 @@ export function createBattle(catalog,placements,seed=4317){
  for(const u of s.units)for(const item of u.items)if(item.endsWith('纹章')){const trait=item.slice(0,-2);if(traitTiers[trait]&&!u.traits.includes(trait))u.traits.push(trait);}
  const rivalSides=[0,1].map(side=>rivalActive(s.units.filter(u=>u.side===side)));for(const u of s.units)u.rivalActive=['赛罗','贝利亚'].includes(u.name)&&rivalSides[u.side];for(const u of s.units)if(u.name==='赛罗'&&rivalSides[u.side])for(const trait of u.evolutions)if(['正义使者','法师','格斗家','狂战士'].includes(trait)&&!u.traits.includes(trait))u.traits.push(trait);
  computeTraits(s);initAbilities(s,abilityAPI);initSpecials(s,abilityAPI);initCombatAugments(s,abilityAPI);initEquipment(s,abilityAPI);finalizeAugmentShields(s,abilityAPI);initAugmentSpecials(s,abilityAPI);initAbilitySummons(s,abilityAPI);initCompanions(s,abilityAPI);for(const u of [...s.units])if(u.name==='赛文')spawnMiclas(s,u);tickSpecials(s,abilityAPI);for(const side of [0,1]){s.traits[side].startingHp=s.units.filter(u=>u.side===side&&!u.special&&u.traits.includes('银河警备队')).reduce((n,u)=>n+u.maxHp,0);const heavy=tier(s.traits[side].counts,'重装战士');if(heavy>=0)for(const u of s.units.filter(u=>u.side===side))shield(s,u,u.maxHp*([.12,.2][heavy]*(ownsCombatAugment(u,'稳固重装')?1.1:1)),ownsCombatAugment(u,'稳固重装')?12:8,'heavy');}
+ initRoyalFusion(s,abilityAPI);
  for(const u of s.units)u.openingSnapshot=Object.fromEntries(['maxHp','baseAd','baseAs','armor','mr','range','ap','adBonus','asBonus','amp','dr','omni','mana','maxMana','extraCrit','extraCritDamage','skillCrit','combatItems','helmetBack','oathItemReady','dragonNext','redemptionNext','archangelNext','sunfireNext','immuneUntil'].filter(k=>u[k]!==undefined).map(k=>[k,structuredClone(u[k])]));
  event(s,'start',null,null,{seed:s.seed});return s;
 }
@@ -218,9 +220,10 @@ export function step(s){
  for(const u of s.units){if(alive(u)&&s.time<u.stunUntil&&!(u.immuneUntil>s.time)){const cancelled=s.queue.filter(a=>a.source===u.id&&['zero','ace','sword','kick','second-cast'].includes(a.type));s.queue=s.queue.filter(a=>!cancelled.includes(a));const effects=(u.effects??[]).filter(e=>e.interrupt);u.effects=(u.effects??[]).filter(e=>!e.interrupt);if(cancelled.length||effects.length){u.stance=null;event(s,'interrupt',u,u,{cancelled:cancelled.length+effects.length});}}u.buffs=u.buffs.filter(b=>b.until>s.time);u.shields=u.shields.filter(sh=>sh.until>s.time&&sh.amount>0);if(u.belialUntil&&s.time>=u.belialUntil){u.belialUntil=0;u.omni=u.baseOmni??0;}
   if(u.reviveAt&&s.time>=u.reviveAt){u.reviveAt=0;u.dead=false;u.pendingKiller=null;u.hp=u.fullRevive?u.maxHp:u.maxHp*[.25,.4,.6][s.traits[u.side].unyield];augmentRevive(s,u,abilityAPI);u.fullRevive=false;u.stunUntil=0;u.immuneUntil=s.time+([3,4,6][s.traits[u.side].unyield]??0);u.attackClock=.2;event(s,'revive',u,u);}
  }
- retrySummons(s,abilityAPI);tickAbilities(s,abilityAPI);tickEquipment(s,abilityAPI);tickSpecials(s,abilityAPI);tickCombatAugments(s,abilityAPI);tickAugmentSpecials(s,abilityAPI);
+ tickRoyalFusion(s,abilityAPI);retrySummons(s,abilityAPI);tickAbilities(s,abilityAPI);tickEquipment(s,abilityAPI);tickSpecials(s,abilityAPI);tickCombatAugments(s,abilityAPI);tickAugmentSpecials(s,abilityAPI);
  const actions=s.queue.filter(a=>a.at<=s.time+1e-8);s.queue=s.queue.filter(a=>a.at>s.time+1e-8);
  for(const u of s.units.filter(alive)){
+  if(u.fusing)continue;
   if(u.npcStage>=4&&s.time>=u.npcNext){u.npcNext+=u.npcStage===5?5:6;const v=nearest(s,u);if(v&&s.time>=u.stunUntil){const targets=u.npcStage===5?nearby(s,u,u,1):nearby(s,u,v,0);for(const w of targets)hit(s,u,w,u.npcStage===5?350:u.npcStage===4?200:300,'magic',{noCrit:true});event(s,'cast',u,v);}}
   if(u.npcStage===5&&!u.npcShield&&u.hp<u.maxHp*.5){u.npcShield=true;shield(s,u,800,8,'npc-boss');}
   if(u.immuneUntil>s.time)u.stunUntil=0;

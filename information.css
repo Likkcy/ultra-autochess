@@ -12,3 +12,7 @@
 .armory-option{display:inline-flex;gap:5px;align-items:center;margin:6px 9px 6px 0}.armory-option .text-btn{font-size:13px}
 
 .reference-inner .booster-effect-card{display:block;padding:16px 18px}.booster-effect-card>b{display:block;margin-bottom:9px}.reference-inner .booster-effect-card p{margin:7px 0}.booster-effect-card strong{color:#315f58;margin-right:6px}
+
+.trait-chip.prismatic,.trait-level.prismatic{color:#493573!important;border:2px solid #997ac8;background:linear-gradient(120deg,#eee2fa,#def0f0 46%,#f7edca);box-shadow:0 0 12px #ab86d233}.trait-chip.prismatic::before{content:"✦ ";color:#8b5fbd}.trait-level.prismatic b{color:#7447a3!important}
+
+.special-allies{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}.special-allies h3{flex-basis:100%;margin:8px 0;font-size:16px}.special-allies button{font-size:13px;padding:8px 10px}
