@@ -33,5 +33,5 @@ export function mountReference(data){
  if(category==='羁绊')$('catalog-list').innerHTML=Object.entries(traitInfo).filter(([n,d])=>(n+d[0]+d[1].join('')+data.units.filter(u=>u.traits.includes(n)).map(u=>u.name).join('')).includes(q)).map(([n,d])=>'<article><button class="catalog-entry" data-trait-info="'+escape(n)+'"><b>'+escape(n)+'</b><small>'+escape((traitTiers[n]??[1]).join(' / '))+'</small></button><p>'+escape(d[0])+'</p></article>').join('');bind($('catalog-list'));
  }
  for(const b of $('catalog-tabs').children)b.onclick=()=>{category=b.dataset.category;renderCatalog();};$('catalog-search').oninput=renderCatalog;$('catalog-open').textContent='图鉴';$('catalog-open').onclick=()=>{renderCatalog();$('catalog').showModal();};
- return {showItem,showTrait,showUnit,bind};
+ return {showItem,showTrait,showUnit,bind,showAugment:(name,effect)=>open(name,'<p>'+escape(effect)+'</p>')};
 }

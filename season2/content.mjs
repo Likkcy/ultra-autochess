@@ -22,7 +22,7 @@ export const skills={
 export const passives={奈克瑟斯:'每参与击杀一名敌方棋子，永久获得0.6/1/1.6攻击力。',阿斯特拉:'每第四次普攻踢击目标及其后方，造成80/120/200%攻击力伤害。',萨德拉:'每份残骸永久获得0.4/0.7/1.1攻击力。',古敦:'每份残骸永久获得0.3/0.5/0.8双抗。',双尾怪:'每份残骸永久获得0.5/0.8/1.2法强。',博伽茹:'每份残骸永久获得6/9/14生命；技能追加永久增长生命的12%伤害。',杰克:'有护盾时普攻追加最大生命2/3/5%的物理伤害。',幽怜:'攻击灼烧目标额外恢复2/3/5蓝量。',扎姆夏:'每第四次普攻追加40/60/100%攻击力伤害。',帝国星人:'每攻击同一目标三次获得4/6/10%伤害增幅，最多三层；换目标重置。',雷丘巴斯:'攻击被减速的目标追加25/40/70魔法伤害。',布莱泽:'连续攻击同一目标三次，下一击追加60/90/150魔法伤害。',乔尼亚斯:'受到六次普攻后，下一击追加最大生命3/4/6%的魔法伤害。',卡蜜拉:'攻击灼烧目标追加25/40/70魔法伤害。',盖亚:'有护盾时获得15/18/25%伤害减免。',赛罗:'每三次普攻获得20/30/45%攻速，持续2秒。',拉贡:'低于50%生命时获得10/15/25%攻速。',巴巴尔星人:'参与击杀恢复12/18/30蓝量，获得15/20/30%全能吸血3秒，冷却2秒。',芹泽和也:'技能增益期间参与击杀，恢复10/15/25蓝量，每次施法一次。',伊格尼斯:'技能期间参与击杀恢复15/20/30蓝量，获得25/35/55%攻速3秒，每次施法一次。',杰斯提斯:'每次受到控制恢复4/6/10蓝量。'};
 export const catalog=rows.map(([name,cost,t,hp,ad,as,r,range,start,max])=>({name,cost,traits:t.split(' '),hp,ad,as,armor:r,mr:r,range,mana:[start,max],implemented:true,skill:skills[name],passive:passives[name]??'',unique:unique[name]??null}));
 export function effectiveCost(p,d){return d.name==='奈克瑟斯'?Math.max(3,p.nexusCost??3):d.cost;}
-export function effectiveDefinition(p,d){if(d.name!=='奈克瑟斯'||!(p.nexusCost>3))return d;return {...d,cost:p.nexusCost,hp:p.nexusCost===4?1150:1400,ad:p.nexusCost===4?80:100,as:p.nexusCost===4?.8:.9,armor:p.nexusCost===4?50:60,mr:p.nexusCost===4?50:60,unique:'进化之光',skill:p.nexusCost===4?{...skills.奈克瑟斯,name:'进化光刃·红色青年',p:[2.2,3.3,5.3],shield:[260,390,630],growthShield:3}:{name:'诺亚闪电',p:[3.5,5.25,999],m:[300,450,99999],line:true,hpShield:[.35,.45,3],duration:4},displayName:p.nexusCost===5?'奈克瑟斯〔诺亚〕':'奈克瑟斯〔进化〕'};}
+export function effectiveDefinition(p,d){if(d.name!=='奈克瑟斯'||!(p.nexusCost>3))return d;return {...d,cost:p.nexusCost,hp:p.nexusCost===4?1150:1400,ad:p.nexusCost===4?80:100,as:p.nexusCost===4?.8:.9,armor:p.nexusCost===4?50:60,mr:p.nexusCost===4?50:60,unique:'进化之光',passive:'每参与击杀一名敌方棋子，永久获得'+(p.nexusCost===4?'0.8/1.3/2':'1/1.6/3')+'攻击力。',skill:p.nexusCost===4?{...skills.奈克瑟斯,name:'进化光刃·红色青年',p:[2.2,3.3,5.3],shield:[260,390,630],growthShield:3}:{name:'诺亚闪电',p:[3.5,5.25,999],m:[300,450,99999],line:true,hpShield:[.35,.45,3],duration:4},displayName:p.nexusCost===5?'奈克瑟斯〔诺亚〕':'奈克瑟斯〔进化〕'};}
 export function counts(units){const result={},seen=new Set();for(const u of units){if(u.special||seen.has(u.name))continue;seen.add(u.name);for(const t of new Set([...(u.traits??[]),...(u.items??[]).filter(n=>n.endsWith('纹章')).map(n=>n.slice(0,-2))]))result[t]=(result[t]??0)+1;}return result;}
 export const rank=(c,t)=>(tiers[t]??[]).filter(n=>(c[t]??0)>=n).length-1;
 export const constellations=['船帆座','罗盘座','鲸鱼座','天蝎座','北冕座','天琴座','猎户座'];
@@ -30,5 +30,53 @@ export const routes=['战斗','繁荣','坚守','研习'];
 export const ancient=['征潮战刃','黄金罗盘','深海壁垒','潮汐圣典'];
 export const legendary=['不沉之旗','船长佩刀','黄金火铳'];
 export const traitText={
-海盗:'完成任务获取声望，可保留声望或兑换更高档战利品。3开启；5声望+25%；7可接两个任务、声望+50%；10声望+100%，首次战后获得传奇战利品。',皇家海军:'2/4/6/8档舰炮逐步增强；10档开战及每2秒轰击全体敌人，伤害为160+18×海军总星级。',岛屿卫士:'获得8/14/22%减伤。各卫士首次低于40%生命时，全队获得80/150/250护盾，自己额外获得10/15/20%减伤4秒。',海怪:'海怪拥有更高的基础属性，不提供额外的羁绊加成。',探险家:'2档选择固定路线与古代神器；4/6档充能+25/50%，6档神器属性与战斗数值+20%。100/300/600能量逐级解放。',私掠者:'普攻追加攻击力8/14/22%的真实伤害；连续攻击同一目标六次后伤害+10/18/30%，换目标重置。',商人:'2/3/4档开启银行、赌彩与金币商店，档位越高商品品质和投资收益越高。投资三个玩家战回合，不计利息。',海怪猎手:'猎手获得12/22/35%攻击力与攻速。全队累计8/7/6次猎手参与击杀，获得2/3/4金币。',食腐者:'参与击杀分别获得1/2/3残骸，永久强化自身。古敦增长双抗，双尾怪增长法强，萨德拉增长攻击，博伽茹增长生命。',远灵教会:'获得12/22/35%攻击力和12/22/35法强。攻击施加4秒灼烧，最多五层，每层每秒6/10/15魔法伤害。各自施加18/15/12次后狂热，攻速+35/60/100%。',幽灵:'阵亡后附身最近友军，可多人附身。2/3/4档附身强度100/130/170%。西博兹给双抗，卡蜜拉给吸血，宙达给法强和增伤。',海洋巨灵:'开战合体至选定巨灵，吸收其他巨灵45/65%基础生命、攻击、法强，获得12/20%减伤。保留队长装备，其他装备按类型贡献属性。',遗迹守护者:'获得1/2/3个可移动核心与守卫。核心周围一格开局护盾150/250/400、双抗10/20/35，守护者收益1.5倍，重叠不累加。',星宿:'每局固定一个公开星座，3/5/7档增强，9档完全显现。',重装战士:'双抗+20/40/70；开战前8秒额外增加相同数值。',斗士:'全队生命+100/180/300，斗士额外获得15/30/50%最大生命。',战士:'全能吸血10/15/22%，增伤8/15/25%；低于50%生命时羁绊增伤提高50%。',决斗大师:'每次普攻获得5/8/12%攻速，最多十层，持续本场。',刺客:'技能可暴击；暴击率+15/25/40%，暴击伤害+10/25/45个百分点。',法师:'技能双重施法；最终法强调整为75/95/120%。',神谕:'每3秒全队回蓝2/4/6，神谕额外回蓝4/6/9。',神枪手:'射程+1；与目标每相隔一格伤害+3/5/8%，最多五格。',炮手:'增伤8/15/25%；施法后4秒羁绊增伤翻倍。',秘术师:'全队魔抗+20/35/60。'};
-export function skillText(d){const k=d.skill,parts=[];if(!k)return '';const join=v=>Array.isArray(v)?v.join('/'):v;if(k.p)parts.push(`造成${k.p.map(x=>Math.round(x*100)).join('/')}%攻击力的物理伤害${k.shots?`，攻击${k.shots}次`:''}`);if(k.m)parts.push(`造成${join(k.m)}魔法伤害`);if(k.lineMagic)parts.push(`随后发射光束，造成${join(k.lineMagic)}魔法伤害`);if(k.dot)parts.push(`范围内每秒造成${join(k.dot)}魔法伤害，持续${k.duration}秒`);if(k.delayed)parts.push(`${k.duration}秒后造成${join(k.delayed)}魔法伤害`);if(k.mLast)parts.push(`最后一击追加${join(k.mLast)}魔法伤害`);if(k.shield)parts.push(`${k.support?`为${k.support===99?'所有':k.support+'名'}友军`:'自身'}提供${join(k.shield)}护盾，持续${k.duration}秒`);if(k.hpShield)parts.push(`获得最大生命${k.hpShield.map(v=>v*100).join('/')}%护盾${k.growthShield?'，追加永久增长攻击力的'+k.growthShield*100+'%':''}`);if(k.growthShield&&!k.hpShield)parts.push(`护盾额外增加永久增长攻击力的${k.growthShield*100}%`);if(k.heal)parts.push(`恢复${join(k.heal)}生命`);if(k.regen)parts.push(`${k.duration}秒内共恢复${k.regen.map(v=>v*k.duration).join('/')}生命`);if(k.as)parts.push(`攻速+${k.as.map(v=>v*100).join('/')}%，持续${k.duration}秒`);if(k.dr)parts.push(`减伤${k.dr.map(v=>v*100).join('/')}%，持续${k.duration}秒`);if(k.stun)parts.push(`晕眩${join(k.stun)}秒`);if(k.onhit)parts.push(`期间普攻追加${k.onhit.map(v=>v*100).join('/')}%攻击力伤害`);if(k.attackShots)parts.push(`接下来${k.shotCount}次普攻造成${k.attackShots.map(v=>v*100).join('/')}%攻击力伤害`);if(k.magicShots)parts.push(`接下来三次普攻追加${join(k.magicShots)}魔法伤害`);if(k.leech)parts.push(`恢复实际伤害的${k.leech.map(v=>v*100).join('/')}%`);if(k.allyAS)parts.push(`友军攻速+${k.allyAS.map(v=>v*100).join('/')}%`);if(k.allyAP)parts.push(`友军法强+${join(k.allyAP)}`);if(k.allyAD)parts.push(`友军攻击力+${k.allyAD.map(v=>v*100).join('/')}%`);if(k.allyMana)parts.push(`友军恢复${join(k.allyMana)}蓝量`);if(k.vuln)parts.push(`目标受到${k.physicalVuln?'物理':''}伤害+${k.vuln.map(v=>v*100).join('/')}%，持续${k.duration}秒`);if(k.slow)parts.push(`目标攻速降低${k.slow*100}%`);if(k.shred)parts.push(`目标护甲降低${k.shred*100}%`);if(k.weaken)parts.push(`目标伤害降低${Array.isArray(k.weaken)?k.weaken.map(v=>v*100).join('/'):k.weaken*100}%，持续${k.duration}秒`);if(k.parasite)parts.push(`寄生${k.duration}秒，目标施法受到${join(k.parasite)}魔法伤害并为施法者回蓝8/12/20`);if(k.omni)parts.push(`获得${k.omni.map(v=>v*100).join('/')}%全能吸血`);if(k.returning)parts.push('头镖返回造成去程50%的路径伤害');if(k.pierce)parts.push('穿透目标，对后方敌人造成50%伤害');if(k.execute)parts.push(`对低生命目标伤害提高${k.execute*100}%`);return parts.join('；')+'。';}
+海盗:'完成任务获取声望，可保留声望或兑换更高档战利品。3开启，只有激活海盗时才推进任务；5声望+25%；7可接两个任务、声望+50%；10声望+100%，首次战后获得传奇战利品。',皇家海军:'2/4/6/8/10人分别获得150/250/250/400/400开场护盾。6人额外获得15%攻击力和15法强，8人提高至25%和25法强。2人每6秒炮击一名敌人；4人改为目标周围一格；6人命中的敌人护甲降低20%持续4秒；8人炮击间隔缩短至4秒。普通炮击造成100＋12×海军总星级的物理伤害。10人开战及每2秒轰击全体敌人，造成160＋18×海军总星级的物理伤害。',岛屿卫士:'获得8/14/22%减伤。各卫士首次低于40%生命时，全队获得80/150/250护盾，自己额外获得10/15/20%减伤4秒。',海怪:'海怪拥有更高的基础属性，不提供额外的羁绊加成。',探险家:'2档选择固定路线与古代神器；4/6档充能+25/50%，6档神器属性与战斗数值+20%。100/300/600能量逐级解放。',私掠者:'普攻追加攻击力8/14/22%的真实伤害；连续攻击同一目标六次后伤害+10/18/30%，换目标重置。',商人:'2/3/4档开启银行、赌彩与金币商店，档位越高商品品质和投资收益越高。投资三个玩家战回合，不计利息。',海怪猎手:'猎手获得12/22/35%攻击力与攻速。全队累计8/7/6次猎手参与击杀，获得2/3/4金币。',食腐者:'参与击杀分别获得1/2/3残骸，永久强化自身。古敦增长双抗，双尾怪增长法强，萨德拉增长攻击，博伽茹增长生命。',远灵教会:'获得12/22/35%攻击力和12/22/35法强。攻击施加4秒灼烧，最多五层，每层每秒6/10/15魔法伤害。各自施加18/15/12次后狂热，攻速+35/60/100%。',幽灵:'阵亡后附身最近友军，可多人附身。2/3/4档附身强度100/130/170%。西博兹给双抗，卡蜜拉给吸血，宙达给法强和增伤。',海洋巨灵:'开战合体至选定巨灵，吸收其他巨灵45/65%基础生命、攻击、法强，获得12/20%减伤。保留队长装备，其他装备按类型贡献属性。',遗迹守护者:'获得1/2/3个可移动核心与守卫。核心周围一格开局护盾150/250/400、双抗10/20/35，守护者收益1.5倍，重叠不累加。',星宿:'每局固定一个公开星座，3/5/7档增强，9档完全显现。',重装战士:'双抗+20/40/70；开战前8秒额外增加相同数值。',斗士:'全队生命+100/180/300，斗士额外获得15/30/50%最大生命。',战士:'全能吸血10/15/22%，增伤8/15/25%；低于50%生命时羁绊增伤提高50%。',决斗大师:'每次普攻获得5/8/12%攻速，最多十层，持续本场。',刺客:'技能可暴击；暴击率+15/25/40%，暴击伤害+10/25/45个百分点。',法师:'技能双重施法；最终法强调整为75/95/120%。',神谕:'每3秒全队回蓝2/4/6，神谕额外回蓝4/6/9。',神枪手:'射程+1；与目标每相隔一格伤害+3/5/8%，最多五格。',炮手:'增伤8/15/25%；施法后4秒羁绊增伤翻倍。',秘术师:'全队魔抗+20/35/60。'};
+export function skillText(d,hero=null){
+ if(hero==='无尽一刀')return '技能：每次释放技能获得6%攻击力，持续本场。不再强化接下来的三次普攻。每第四次普攻追加40/60/100%攻击力的物理伤害，此次追加伤害忽略30%护甲。';
+ if(hero==='归来的英雄')return '技能：获得最大生命15/18/24%的护盾，持续4秒。接下来4秒手镯环绕自身，每秒对周围一格的敌人造成160/240/390%攻击力的物理伤害；自身有护盾时，各次攻击追加最大生命2/3/5%的物理伤害。';
+ if(hero==='极寒海域')return '技能：向目标所在直线喷射持续2秒的冰流，每0.5秒造成91/136.5/227.5魔法伤害，并降低25%攻速3秒。第四次连续命中使敌人晕眩1秒；被控制时冰流中断。';
+ let k=d.skill;if(hero==='双星连舞')k={...k,as:null};if(hero==='深海猎食者')k={...k,p:k.p.map(v=>v*.65),shots:2,leech:null};if(hero==='远灵圣歌')k={...k,m:k.m.map(v=>v*1.8),bounce:null};if(!k)return '';const parts=[],join=v=>Array.isArray(v)?v.join('/') : v,pct=v=>Array.isArray(v)?v.map(x=>Math.round(x*1000)/10).join('/'):Math.round(v*1000)/10,duration=k.duration??4;
+ const enemy=k.cone?'前方扇形内的敌人':k.line?'光束路径上的敌人':k.aoe!==undefined?(k.selfCenter?'自身':'目标')+'周围'+k.aoe+'格内的敌人':'当前目标';
+ const friends=k.support===99?'所有友军':k.support?'生命比例最低的'+k.support+'名友军':'自身';
+ if(k.dense)parts.push('选择敌人最密集的位置');if(k.dash)parts.push('向目标突进最多'+k.dash+'格');
+ if(k.p||k.m){const damage=[k.p?pct(k.p)+'%攻击力的物理伤害':'',k.m?join(k.m)+(k.growthDamage?'加上永久增长生命'+pct(k.growthDamage)+'%的':'')+'魔法伤害':''].filter(Boolean).join('和');parts.push('攻击'+enemy+(k.shots?' '+k.shots+'次，每次':'，')+'造成'+damage);}
+ if(k.splash&&k.aoe!==undefined)parts.push('范围内其他敌人承受'+pct(k.splash)+'%伤害');
+ if(k.lineMagic)parts.push('随后向目标发射贯穿光束，对路径上的敌人造成'+join(k.lineMagic)+'魔法伤害');
+ if(k.dot)parts.push('在'+(k.selfCenter?'自身':k.dense?'所选位置':'目标')+'周围'+(k.aoe??1)+'格形成持续'+duration+'秒的区域，每秒对区域内敌人造成'+join(k.dot)+'魔法伤害');
+ if(k.delayed)parts.push(duration+'秒后，对该区域内的敌人造成'+join(k.delayed)+'魔法伤害');
+ if(k.mLast)parts.push('最后一击追加'+join(k.mLast)+'魔法伤害');
+ if(k.shield)parts.push('为'+friends+'提供'+join(k.shield)+'护盾'+(k.growthShield?'，护盾额外增加永久增长攻击力的'+pct(k.growthShield)+'%':'')+'，持续'+duration+'秒');
+ if(k.selfShield)parts.push('自身另获上述护盾值'+pct(k.selfShield)+'%的护盾，持续'+duration+'秒');
+ if(d.name==='卡内贡')parts.push('每持有10金币，技能护盾提高4%，最多20%');
+ if(d.name==='诺恩马尔特')parts.push('位于遗迹核心周围一格的友军获得的技能护盾提高25%');
+ if(k.hpShield)parts.push('自身获得最大生命'+pct(k.hpShield)+'%的护盾，持续'+duration+'秒');
+ if(k.heal)parts.push('为'+friends+'恢复'+join(k.heal)+'生命');
+ if(d.name==='高斯')parts.push('溢出的治疗转为持续4秒的护盾，最多为受益友军最大生命的20%，并移除其攻速与伤害降低效果');
+ if(k.regen)parts.push('自身每秒恢复'+join(k.regen)+'生命，持续'+duration+'秒');
+ if(k.as)parts.push('自身获得'+pct(k.as)+'%攻速，持续'+duration+'秒');
+ if(k.res)parts.push('为'+friends+'提供'+join(k.res)+'护甲和魔抗，持续'+duration+'秒');
+ if(k.dr)parts.push('自身获得'+pct(k.dr)+'%伤害减免，持续'+duration+'秒');
+ if(k.stun)parts.push('使受到技能攻击的敌人晕眩'+join(k.stun)+'秒');
+ if(d.name==='加坦杰厄')parts.push('被光束命中的敌人晕眩1.5秒');
+ if(k.onhit)parts.push('期间普攻追加'+pct(k.onhit)+'%攻击力的物理伤害');
+ if(k.attackShots)parts.push('接下来'+k.shotCount+'次普攻造成'+pct(k.attackShots)+'%攻击力的物理伤害，强化持续'+duration+'秒');
+ if(k.pen)parts.push('最后一次强化普攻忽略目标'+pct(k.pen)+'%护甲');
+ if(k.magicShots)parts.push('接下来三次普攻各追加'+join(k.magicShots)+'魔法伤害');
+ if(k.leech)parts.push('恢复此次技能实际伤害的'+pct(k.leech)+'%生命');
+ if(k.allyAS)parts.push('为'+friends+'提供'+pct(k.allyAS)+'%攻速，持续'+duration+'秒');
+ if(k.allyAP)parts.push('为'+friends+'提供'+join(k.allyAP)+'法强，持续'+duration+'秒');
+ if(k.allyAD)parts.push('为射程最远的另一名友军提供'+pct(k.allyAD)+'%攻击力，持续'+duration+'秒');
+ if(k.allyMana)parts.push('为'+(d.name==='大田结花'?'正在攻击该目标的友军':d.name==='梅特龙星人'?'蓝量比例最低的另一名友军':friends)+'恢复'+join(k.allyMana)+'蓝量');
+ if(k.vuln)parts.push('使'+enemy+'受到的'+(k.physicalVuln?'物理':'所有')+'伤害提高'+pct(k.vuln)+'%，持续'+duration+'秒');
+ if(k.slow)parts.push('使受到技能影响的敌人攻速降低'+pct(k.slow)+'%，持续3秒');
+ if(k.shred)parts.push('使目标护甲降低'+pct(k.shred)+'%，持续'+duration+'秒');
+ if(k.weaken)parts.push('使'+(k.dot?'区域内敌人':'目标')+'造成的伤害降低'+pct(k.weaken)+'%，持续'+duration+'秒');
+ if(k.drain)parts.push('使命中的敌人失去'+join(k.drain)+'蓝量');
+ if(k.parasite)parts.push('寄生目标'+duration+'秒；目标每次施法时受到'+join(k.parasite)+'魔法伤害，并为自身恢复8/12/20蓝量');
+ if(k.omni)parts.push('自身获得'+pct(k.omni)+'%全能吸血，持续'+duration+'秒');
+ if(k.bounce)parts.push('弹射至距离目标最近的'+k.bounce+'名其他敌人，造成首段'+pct(k.splash)+'%的魔法伤害');
+ if(k.returning)parts.push('头镖返回时，对路径上的敌人造成去程'+pct(k.returning)+'%的物理伤害');
+ if(k.pierce)parts.push((k.attackShots?'强化普攻':'技能')+'穿透目标，对其后方敌人造成'+pct(k.pierce)+'%的物理伤害');
+ if(k.execute)parts.push('目标生命低于'+(d.name==='博伽茹'?35:40)+'%时，技能伤害提高'+pct(k.execute)+'%');
+ if(hero==='远灵圣歌')parts.push('每施加五次灼烧，下一次技能伤害额外提高50%');return '技能：'+parts.join('。')+'。';
+}
