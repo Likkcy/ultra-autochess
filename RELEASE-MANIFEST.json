@@ -1,0 +1,442 @@
+{
+  "release": "20261008-loot-music-24",
+  "seasons": 2,
+  "musicTracks": 24,
+  "files": [
+    {
+      "path": "abilities.mjs",
+      "bytes": 25062,
+      "sha256": "758bf6d0632bf2737e6406943b2624c05d6504791d35442eed4b7ccf38f23c1b"
+    },
+    {
+      "path": "ai-planner.mjs",
+      "bytes": 5794,
+      "sha256": "09b208e265d95692afda9c645fb110fa72f81533306c114198739eeff362b360"
+    },
+    {
+      "path": "app.mjs",
+      "bytes": 25971,
+      "sha256": "27e287d81d4aaaa955e6971cb080e4bbc9c110ae0725b264435cdcfbbadf4721"
+    },
+    {
+      "path": "assets/audio/music/track-01.ogg",
+      "bytes": 2700230,
+      "sha256": "b938d44a64fbb578e5ef95a47cfee645eb00164cc66474de1b8c63af21d52c72"
+    },
+    {
+      "path": "assets/audio/music/track-02.ogg",
+      "bytes": 2717348,
+      "sha256": "2100542e18dcbbdfa847ebc5fcb22e4f9b7e0c2687a68436303006cc62df3e1c"
+    },
+    {
+      "path": "assets/audio/music/track-03.ogg",
+      "bytes": 3326004,
+      "sha256": "e25c4d667753a42d08931830d7a4a0b665f1f80f2848dbd2f43ee7ab03accb31"
+    },
+    {
+      "path": "assets/audio/music/track-04.ogg",
+      "bytes": 3339354,
+      "sha256": "14d819b28b59f2e02b1466700230f9afc536f4bb1d65f967fc6fa7938b6d43f9"
+    },
+    {
+      "path": "assets/audio/music/track-05.ogg",
+      "bytes": 3548663,
+      "sha256": "c902f29e8b019f9c758f1cd250cccef73e9809766fa1a0a9d79614f7d63ad94c"
+    },
+    {
+      "path": "assets/audio/music/track-06.ogg",
+      "bytes": 3140211,
+      "sha256": "45cae2db5679151ed8e07f325174f6c0bf1a4a281f3300f24ffdfc73662a67c6"
+    },
+    {
+      "path": "assets/audio/music/track-07.ogg",
+      "bytes": 2781252,
+      "sha256": "eae11c35dc573f47f3b474bd4d9f3106a4ac7e90886ad123e706fd4a1fe10454"
+    },
+    {
+      "path": "assets/audio/music/track-08.ogg",
+      "bytes": 3339364,
+      "sha256": "8d0b2dc51b392fcb456dab3ecfd80429b205a12a6b5046cb8eb8af2e692c9edb"
+    },
+    {
+      "path": "assets/audio/music/track-09.ogg",
+      "bytes": 2746439,
+      "sha256": "af4f319086f192a21ade916d368f77f5cf193dfafed496291d1f2e9658c847fc"
+    },
+    {
+      "path": "assets/audio/music/track-10.ogg",
+      "bytes": 3006472,
+      "sha256": "c1acdce8202655a1b334aea83362ee53bfd325253d174824d99216af6785e2a2"
+    },
+    {
+      "path": "assets/audio/music/track-11.ogg",
+      "bytes": 3089849,
+      "sha256": "be74fb000b5393b170ecf5282edfbd20dab49b5cd2561a8dea16a510ce52365a"
+    },
+    {
+      "path": "assets/audio/music/track-12.ogg",
+      "bytes": 3008341,
+      "sha256": "00cf66a47fa79f298def774c3028d204977120f2c03d3d80b9dc50345678b6d0"
+    },
+    {
+      "path": "assets/audio/music/track-13.ogg",
+      "bytes": 2658639,
+      "sha256": "9c196d4f520293819f510c59c98fa28c9fa73ca18b410981f8a95e914c6329da"
+    },
+    {
+      "path": "assets/audio/music/track-14.ogg",
+      "bytes": 3517020,
+      "sha256": "c4cda64e7416706b97a66c7742481427329f96437f9af64fef11bbbf46a07e72"
+    },
+    {
+      "path": "assets/audio/music/track-15.ogg",
+      "bytes": 3449913,
+      "sha256": "7496d18619b0be2c68b0547aeded5fe7f38ad91017f5e68ac7c4c552cb3aba8d"
+    },
+    {
+      "path": "assets/audio/music/track-16.ogg",
+      "bytes": 3293650,
+      "sha256": "6a3b116d4433d0c6c8adf414bc41b07b48523a94afb4adc98dabbe3161386a30"
+    },
+    {
+      "path": "assets/audio/music/track-17.ogg",
+      "bytes": 2561325,
+      "sha256": "c53105e656f7acb82ed0d5cdbfdfd25129103669370d3f1caefdd237a5113a0e"
+    },
+    {
+      "path": "assets/audio/music/track-18.ogg",
+      "bytes": 2626473,
+      "sha256": "9ad9d713114896bac7271953e99a98e7a0c76957ebdc8b4602d75c94e8ce8e7f"
+    },
+    {
+      "path": "assets/audio/music/track-19.ogg",
+      "bytes": 2771237,
+      "sha256": "dc5bac5995de3ef03aa8ca6e46ed0935d0328358fbd42625bd03302d5543b692"
+    },
+    {
+      "path": "assets/audio/music/track-20.ogg",
+      "bytes": 2783548,
+      "sha256": "8eb9ff153576bcba1138af7d14d4099ee1ec9d3bf46a163eee73b08dbfc83873"
+    },
+    {
+      "path": "assets/audio/music/track-21.ogg",
+      "bytes": 3177190,
+      "sha256": "fdf7570aff5541909ce9a4418050de1726b08b05c8fdb3d2f39258594c759d23"
+    },
+    {
+      "path": "assets/audio/music/track-22.ogg",
+      "bytes": 2602250,
+      "sha256": "6cba3dbfc872f20f382fe370efc747c797b7820563ae6ca652180f1c4f0809bb"
+    },
+    {
+      "path": "assets/audio/music/track-23.ogg",
+      "bytes": 2568732,
+      "sha256": "922e822ccfe56cf908cdeb4d80ade58b08c0affb566b4790901e644e2e9a43cf"
+    },
+    {
+      "path": "assets/audio/music/track-24.ogg",
+      "bytes": 3124895,
+      "sha256": "494ad59a1e4fda4cc86fdcdc12b7ab4f760a41f2a804abc2ecd6dbe69118cc7f"
+    },
+    {
+      "path": "assets/audio/sfx/attack.ogg",
+      "bytes": 10677,
+      "sha256": "60ffc535adb86c0d38e35edced1128e8f696b3fe8269aebdb4fc4fd2856acd4b"
+    },
+    {
+      "path": "assets/audio/sfx/cast.ogg",
+      "bytes": 18766,
+      "sha256": "58db14d284816cf93fc4798ebfd58bd782f7ef332625da4ebe9dc4063c89c4d3"
+    },
+    {
+      "path": "assets/audio/sfx/death.ogg",
+      "bytes": 10809,
+      "sha256": "23b18f8e97275748313ed6eeda1e1a24a070a61c0346fb519fea764c247de2a1"
+    },
+    {
+      "path": "assets/audio/sfx/defeat.ogg",
+      "bytes": 24927,
+      "sha256": "abe8b87221edaaa58abe90a0d30c247bf1ba4b014f61c6c252ddd12cb4105fdc"
+    },
+    {
+      "path": "assets/audio/sfx/equip.ogg",
+      "bytes": 15119,
+      "sha256": "f71a27b528e91493ece117d413cf3acb39d926ebdb50e7570f995dac58cb6ed7"
+    },
+    {
+      "path": "assets/audio/sfx/loot.ogg",
+      "bytes": 15867,
+      "sha256": "227b4afa364a51d504d38742b485c67a136cf7627e18e72690008d462fb03e96"
+    },
+    {
+      "path": "assets/audio/sfx/purchase.ogg",
+      "bytes": 11232,
+      "sha256": "d819c51dd04407b1a90e399c5d61b24a77144bfc37406b0ad0d756ebb8808579"
+    },
+    {
+      "path": "assets/audio/sfx/upgrade.ogg",
+      "bytes": 18842,
+      "sha256": "ed134a4fcf4bd5a6bfcd2e3c1146bbe6ee66320520087f9800c152c524df5b7d"
+    },
+    {
+      "path": "assets/audio/sfx/victory.ogg",
+      "bytes": 21476,
+      "sha256": "0b6e10177ed5457dc619033eca8027e303cd7786170f08dfc0caadca6c3300fc"
+    },
+    {
+      "path": "augment-combat.mjs",
+      "bytes": 12686,
+      "sha256": "494ef4d722862355b41ae0dbea16ce3cf6fd31e150a281164f3fe343bc9bce4a"
+    },
+    {
+      "path": "augment-data.mjs",
+      "bytes": 52465,
+      "sha256": "85cc5d63f08a89fd63254db580f3c4aea9597a1eef6a75dd52b8d8c01cc02415"
+    },
+    {
+      "path": "augment-info.mjs",
+      "bytes": 3083,
+      "sha256": "df28265e016d1b5b6fa3ce31aa76b53bed1e729e654a4a5013c942efa428e1f2"
+    },
+    {
+      "path": "augment-specials.mjs",
+      "bytes": 8681,
+      "sha256": "7c98e16875bcbafcb53099f47ddb0b5e5c1c80f4ba1eae6b5c2cdf7e1513f944"
+    },
+    {
+      "path": "augments.mjs",
+      "bytes": 18417,
+      "sha256": "fbdba9687a79bf46b79d2b74e80937dc46aaa14ed29e8951c27b22e9313561ed"
+    },
+    {
+      "path": "battle-vfx.mjs",
+      "bytes": 2248,
+      "sha256": "890a159054359e7fe9b9264da6c79a2df0c37d449ef0b5d30e2b8a30272a237d"
+    },
+    {
+      "path": "board-view.mjs",
+      "bytes": 809,
+      "sha256": "f82b00071aaaf3a266d472036bf087b6489d8b9398e879c58759209a5ae314aa"
+    },
+    {
+      "path": "carousel-rules.mjs",
+      "bytes": 1144,
+      "sha256": "c6db4bcec86cafe520d72bf5ecc381573e61a815f8da1fcb85a30606224b3e43"
+    },
+    {
+      "path": "carousel-ui.mjs",
+      "bytes": 3870,
+      "sha256": "0853319aec309907f5e07c6da4843a463afb105edac6f7d88f83e5af764dd510"
+    },
+    {
+      "path": "data.json",
+      "bytes": 38202,
+      "sha256": "c51234d5d7013ce4640e43e5690e85663193f21cd7e1c8b242c7c9a5e707e07f"
+    },
+    {
+      "path": "encounters.mjs",
+      "bytes": 2020,
+      "sha256": "0d6e90ca25f361217990426ad417caaaaa2fbf4757eff60cb857ba2b6ee805d1"
+    },
+    {
+      "path": "engine.mjs",
+      "bytes": 33542,
+      "sha256": "ea5dab44123ab9178be477f80b9709b845c2c24cd0794ef9dd2a355f8c39ca36"
+    },
+    {
+      "path": "equipment-data.mjs",
+      "bytes": 6345,
+      "sha256": "e3d65dae120dfd0daced678af586aa25cbed7e49d189f18fcf776fcf108c5cec"
+    },
+    {
+      "path": "equipment.mjs",
+      "bytes": 10723,
+      "sha256": "d69d94e1e9d2e343a21d5dc5f72e3aa645baa487c72cf0e4e5bd82ecc0a73a41"
+    },
+    {
+      "path": "gridman.mjs",
+      "bytes": 1101,
+      "sha256": "9f396f84e31439e6dbb3ef9131e9bd2eedf0504667e5240ca132a39a5c09cb6b"
+    },
+    {
+      "path": "index.html",
+      "bytes": 5225,
+      "sha256": "38f68bab6d15b095f944d38a12c1a6a55e0ba708bccefbeec1516ea7ee0b532c"
+    },
+    {
+      "path": "information.css",
+      "bytes": 6235,
+      "sha256": "4bdd1f10e423b0a242d535b2c582f88e211c14bec3d6308ad4a0c30f5690851c"
+    },
+    {
+      "path": "inventory-drag.mjs",
+      "bytes": 2484,
+      "sha256": "a2f18bb87ea4744282fae354618e52bd80ffc326f3d605c604d2196bd158eba9"
+    },
+    {
+      "path": "item-ledger.mjs",
+      "bytes": 1017,
+      "sha256": "d04c15259a485f7f5c8a3a545e309d76b7b1d627d849c36d8b23313919c5d275"
+    },
+    {
+      "path": "legendary-traits.mjs",
+      "bytes": 4218,
+      "sha256": "115a0d42c607434c01d8b6a0d37550edaa086173c6d842ee57e823e224f05562"
+    },
+    {
+      "path": "loot-view.mjs",
+      "bytes": 2952,
+      "sha256": "42d4fd447e7e9b70b794c3b1586fc629d596dc04a83e974d18f2233be4545634"
+    },
+    {
+      "path": "match-ui.mjs",
+      "bytes": 34950,
+      "sha256": "d38ff7e6a170c563c02ba716d95ab53376e4e60c5fa5932c625b51217fe9b8a1"
+    },
+    {
+      "path": "match.css",
+      "bytes": 3808,
+      "sha256": "4fa87468973948a85ceca4457dd2045d9a5b43f97dfb50afedbb22d2817812eb"
+    },
+    {
+      "path": "match.mjs",
+      "bytes": 51327,
+      "sha256": "10470a119a0db633756336ae4ef00e90c84eaad9dac6ea961366eae58ea98518"
+    },
+    {
+      "path": "media.mjs",
+      "bytes": 4180,
+      "sha256": "605c4555e03b33f98032ca6d8b6a22e084fac46c0262c89a64010e0dad4144a5"
+    },
+    {
+      "path": "neutral-loot.mjs",
+      "bytes": 5682,
+      "sha256": "98f9f9a11c9971d1c09a0c100f9d737adce4b21e0a5270949d1f256e7a07c37e"
+    },
+    {
+      "path": "play-ui.css",
+      "bytes": 6652,
+      "sha256": "b822466e5c10504653852b0376fec75066338dcbbe583deacec627c0eccaa717"
+    },
+    {
+      "path": "rare-augments.mjs",
+      "bytes": 3734,
+      "sha256": "52064b008a2e665a8ecadaa68eb47bd698c4209bc0af931ca72242c11bb9fffb"
+    },
+    {
+      "path": "rare-equipment.mjs",
+      "bytes": 4048,
+      "sha256": "fad27394f5c131842328c7bec380ae5ec68dc0146e639bc86b80ba803072d4dd"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1592,
+      "sha256": "d1f786400bf0e471578fb94eabe70adc61a7b55b375bf8c036909583e8f54d64"
+    },
+    {
+      "path": "reference-ui.mjs",
+      "bytes": 9837,
+      "sha256": "ca22f9281e99a969a046bf3618929c1890593ea77379416c921284b06f45ae21"
+    },
+    {
+      "path": "rivals.mjs",
+      "bytes": 1517,
+      "sha256": "096cdf29df8e72aa0edb37b1122f82f5705c06abdd1d959566e51a6eaa284e1d"
+    },
+    {
+      "path": "season2/app.mjs",
+      "bytes": 29484,
+      "sha256": "eba023a780aa3736dc03a30f846bd302a8d89e34629ae9b5bf67c6baf6ab5b91"
+    },
+    {
+      "path": "season2/augments.mjs",
+      "bytes": 6817,
+      "sha256": "700f448531dc12b2527d4d0842da6904a1b30687fa109f4bb23b47ab73d3f232"
+    },
+    {
+      "path": "season2/content.mjs",
+      "bytes": 18987,
+      "sha256": "0f7236c10a7e6e0de75b913df6753c9c64fb39a1407d2458b3b55430599f2a69"
+    },
+    {
+      "path": "season2/engine.mjs",
+      "bytes": 13340,
+      "sha256": "8db23746d9d9ebf3ffd824857998040975b95380a47523005b41cfae6e61535f"
+    },
+    {
+      "path": "season2/index.html",
+      "bytes": 4088,
+      "sha256": "e69d1c91fbda8ea6d00be074aa4c18523054a5fab3384b8b25c0e423fe871792"
+    },
+    {
+      "path": "season2/information.mjs",
+      "bytes": 4401,
+      "sha256": "9d92a3c9aa0bf0dce4b4d1d92ed9beb8065d33df816b0098b7ca0bebdedf6d32"
+    },
+    {
+      "path": "season2/items.mjs",
+      "bytes": 3808,
+      "sha256": "2d48a04074003151fd2a6f95654e663c1713adfb3def66f2af93a8a982c38fb4"
+    },
+    {
+      "path": "season2/match.mjs",
+      "bytes": 24471,
+      "sha256": "213786d432e7a4aaca457cc4dd1ee3e4668dbcc4011d923b006626e12ea86300"
+    },
+    {
+      "path": "season2/season.css",
+      "bytes": 5087,
+      "sha256": "7e695c39771f3880a05919deec7f2a4f285bfccc1d379576214445920e97db21"
+    },
+    {
+      "path": "season2/skills.mjs",
+      "bytes": 12543,
+      "sha256": "2e37cc6142a04f515c1d89d5cb8546097272c65c28ada96a4f6a5d00dc26d2f4"
+    },
+    {
+      "path": "season2/systems.mjs",
+      "bytes": 13539,
+      "sha256": "4ca64c7aa6a123ca933825efabf338fe507a86a28624894581a70d7d8b8bad01"
+    },
+    {
+      "path": "season2/traits.mjs",
+      "bytes": 17713,
+      "sha256": "f813c1fe73d5baa00700db4d713a540f708a6cbae8e73f4c347327ceafcd61ee"
+    },
+    {
+      "path": "specials.mjs",
+      "bytes": 3379,
+      "sha256": "1b43c1d890846d35c2a82d34079b62e018ed2593453fe500d5b688ec2fb616c3"
+    },
+    {
+      "path": "styles.css",
+      "bytes": 13280,
+      "sha256": "eeb44d73a6969a5c68680a1a4eb9ca7ae2b879dd3b8d7c452e26992d94ced8b0"
+    },
+    {
+      "path": "trait-info.mjs",
+      "bytes": 9076,
+      "sha256": "a1e723c1e28291d030758d0da433fb2b7d6c0bac6b246192ec18154633830d99"
+    },
+    {
+      "path": "trait-resources.mjs",
+      "bytes": 1268,
+      "sha256": "d071ccc9cc5d0792271934544e81f0bddffebdfd0dd53e679363b35b7c90a7fb"
+    },
+    {
+      "path": "unit-info.mjs",
+      "bytes": 14701,
+      "sha256": "13c6a4aca85cb1ff6e91f9ddbb6c74fac7b90b172b9b25014d8bfc1ce71cd7a5"
+    },
+    {
+      "path": ".nojekyll",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "上传步骤.txt",
+      "bytes": 1211,
+      "sha256": "9344c30174341687115d7ade5fd57f729df6a88f21702c5427f4c2f94016ddce"
+    }
+  ]
+}

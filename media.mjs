@@ -1,8 +1,8 @@
-export const tracks=Array.from({length:14},(_,i)=>`./assets/audio/music/track-${String(i+1).padStart(2,'0')}.ogg`);
+export const tracks=Array.from({length:24},(_,i)=>`./assets/audio/music/track-${String(i+1).padStart(2,'0')}.ogg`);
 const defaults={music:false,index:0,musicVolume:35,sound:true,soundVolume:45};
 export function validPreferences(value={}){
  const level=(v,f)=>Number.isFinite(Number(v))?Math.max(0,Math.min(100,Number(v))):f;
- return {music:value.music===true,index:Number.isInteger(value.index)?((value.index%14)+14)%14:0,musicVolume:level(value.musicVolume,35),sound:value.sound!==false,soundVolume:level(value.soundVolume,45)};
+ return {music:value.music===true,index:Number.isInteger(value.index)?((value.index%tracks.length)+tracks.length)%tracks.length:0,musicVolume:level(value.musicVolume,35),sound:value.sound!==false,soundVolume:level(value.soundVolume,45)};
 }
 export function mountMedia(toast){
  let prefs;try{prefs=validPreferences(JSON.parse(localStorage.getItem('autochess-media-v1'))??defaults);}catch{prefs={...defaults};}
